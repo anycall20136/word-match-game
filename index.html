@@ -1591,16 +1591,49 @@
                 }
 
 
-                // 只尝试 resume，不重新创建
+                // 强制 resume，兼容所有浏览器
 
 
-                if (this.audioCtx.state === 'suspended') {
+                if (this.audioCtx.state === 'suspended' || this.audioCtx.state === 'interrupted') {
 
 
                     this.audioCtx.resume().catch(() => {});
 
 
                 }
+
+
+                // 播放一个静音音频来真正激活 AudioContext（Safari/Edge 需要）
+
+
+                try {
+
+
+                    const ctx = this.audioCtx;
+
+
+                    const o = ctx.createOscillator();
+
+
+                    const g = ctx.createGain();
+
+
+                    o.connect(g);
+
+
+                    g.connect(ctx.destination);
+
+
+                    g.gain.setValueAtTime(0.001, ctx.currentTime); // 静音
+
+
+                    o.start(ctx.currentTime);
+
+
+                    o.stop(ctx.currentTime + 0.001);
+
+
+                } catch(e) {}
 
 
                 this.ready = true;
@@ -2128,46 +2161,37 @@
             const overlay = document.getElementById('initOverlay');
 
 
-            overlay.addEventListener('click', () => {
-
-
-                sound.init(); // 激活音频上下文
-
-
-                // 触发 voices 预加载（手机上需要用户手势才能开始加载）
-
-
-                speechSynthesis.getVoices();
-
-
-                speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
-
-
-                // 【关键】iOS Safari 上必须真正播放一次音频才能激活 speechSynthesis
-
-
-                // 用一个极短的声音 "a" 触发，100ms 后取消
-
-
-                const probe = new SpeechSynthesisUtterance('a');
-
-
-                probe.volume = 1; probe.rate = 10; probe.lang = 'en-US';
-
-
-                probe.onend = () => {}; // 防止报错
-
-
-                speechSynthesis.speak(probe);
-
-
-                setTimeout(() => { if (speechSynthesis.speaking) speechSynthesis.cancel(); }, 120);
-
-
+                        let overlayRemoved = false;
+            function handleOverlayClick() {
+                if (overlayRemoved) return;
+                overlayRemoved = true;
+                // 先隐藏遮罩，确保界面可用
                 overlay.style.display = 'none';
+                overlay.removeEventListener('click', handleOverlayClick);
 
-
-            }, { once: true });
+                // 激活音效系统
+                try { sound.init(); } catch(e) {}
+                // 语音引擎激活（正常音量，确保小米浏览器能获得权限）
+                try {
+                    if (window.speechSynthesis) {
+                        speechSynthesis.getVoices();
+                        const activateVoice = new SpeechSynthesisUtterance('Hello');
+                        activateVoice.volume = 1;      // 正常音量
+                        activateVoice.rate = 1.5;
+                        activateVoice.lang = 'en-US';
+                        activateVoice.onend = () => {};
+                        activateVoice.onerror = () => {};
+                        speechSynthesis.speak(activateVoice);
+                    }
+                } catch(e) {}
+            }
+            overlay.addEventListener('click', handleOverlayClick);
+            // 超级兜底：5秒后无论点没点都自动隐藏遮罩
+            setTimeout(function() {
+                if (!overlayRemoved && overlay.style.display !== 'none') {
+                    overlay.style.display = 'none';
+                }
+            }, 5000);
 
 
 
