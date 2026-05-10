@@ -653,13 +653,13 @@
                 margin: 4px 0 !important;
             }
             .stat-card {
-                padding: 10px 4px !important;
+                padding: 6px 4px !important;
                 border-radius: 10px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
                 flex-wrap: wrap !important;
-                gap: 10px !important;
+                gap: 2px !important;
             }
             .stat-icon {
                 font-size: 0.85rem !important;
@@ -672,7 +672,7 @@
                 line-height: 1 !important;
             }
             .stat-label {
-                font-size: 1rem !important;
+                font-size: 0.5rem !important;
                 margin: 0 !important;
                 display: inline !important;
                 line-height: 1 !important;
@@ -939,31 +939,49 @@
                     o.stop(now + duration + 0.05);
                 }
 
-                speak(text, lang) {
-                    if (!this.voiceEnabled) return;
-                    const now = Date.now();
-                    if (now - this.lastSpeakTime < 300) return;
-                    this.lastSpeakTime = now;
-                    const wave = document.getElementById('soundWave');
-                    wave.classList.add('active');
-                    try { speechSynthesis.cancel(); } catch (e) {}
-                    const voices = speechSynthesis.getVoices() || [];
-                    const best = lang === 'zh-CN' ?
-                        (voices.find(v => /zh/i.test(v.lang)) || voices[0]) :
-                        (voices.find(v => /^en/i.test(v.lang)) || voices[0]);
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.lang = lang;
-                    u.rate = lang === 'zh-CN' ? 0.9 : 0.85;
-                    u.pitch = 1;
-                    if (best) u.voice = best;
-                    u.onend = () => wave.classList.remove('active');
-                    u.onerror = () => wave.classList.remove('active');
-                    setTimeout(() => wave.classList.remove('active'), 1000);
-                    try { speechSynthesis.speak(u); } catch (e) {
-                        console.warn('speak error:', e);
-                        wave.classList.remove('active');
-                    }
-                }
+               speak(text, lang) {
+    if (!this.voiceEnabled) return;
+    const now = Date.now();
+    if (now - this.lastSpeakTime < 300) return;
+    this.lastSpeakTime = now;
+    const wave = document.getElementById('soundWave');
+    wave.classList.add('active');
+    try { speechSynthesis.cancel(); } catch (e) {}
+    const voices = speechSynthesis.getVoices() || [];
+
+    // ========= 英语考试听力风格 =========
+    let best;
+    if (lang === 'zh-CN') {
+        // 中文发音：优先 Google 等清晰中文语音
+        best = voices.find(v => /zh/i.test(v.lang) && (v.name.includes('Google') || v.name.includes('Microsoft')))
+            || voices.find(v => /zh/i.test(v.lang))
+            || voices[0];
+    } else {
+        // 英语发音：优选美式/英式，清晰、慢速、接近听力考试
+        best = voices.find(v =>
+            /^en(-US|-GB)?$/i.test(v.lang) &&
+            (v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Samantha') || v.name.includes('Daniel'))
+        ) ||
+        voices.find(v => /^en/i.test(v.lang) && (v.name.includes('Female') || v.name.includes('Male'))) ||
+        voices.find(v => /^en/i.test(v.lang)) ||
+        voices[0];
+    }
+
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    // 英语语速减慢到 0.8，中文保持 0.9
+    u.rate = lang === 'zh-CN' ? 0.9 : 0.8;
+    u.pitch = 1;
+    if (best) u.voice = best;
+
+    u.onend = () => wave.classList.remove('active');
+    u.onerror = () => wave.classList.remove('active');
+    setTimeout(() => wave.classList.remove('active'), 1000);
+    try { speechSynthesis.speak(u); } catch (e) {
+        console.warn('speak error:', e);
+        wave.classList.remove('active');
+    }
+}
 
                 toggleSound() { this.soundEnabled = !this.soundEnabled; return this.soundEnabled; }
                 toggleVoice() { this.voiceEnabled = !this.voiceEnabled; return this.voiceEnabled; }
@@ -985,10 +1003,294 @@
                     '下': {
                         '1': [{ en: 'fox', cn: '狐狸' }, { en: 'giraffe', cn: '长颈鹿' }, { en: 'eagle', cn: '雕；鹰' }, { en: 'wolf', cn: '狼' }, { en: 'penguin', cn: '企鹅' }, { en: 'snake', cn: '蛇' }, { en: 'shark', cn: '鲨鱼' }, { en: 'whale', cn: '鲸' }, { en: 'lion', cn: '狮子' }, { en: 'tiger', cn: '老虎' }, { en: 'monkey', cn: '猴子' }, { en: 'elephant', cn: '大象' }, { en: 'rabbit', cn: '兔子' }, { en: 'bear', cn: '熊' }, { en: 'bird', cn: '鸟' }, { en: 'chicken', cn: '鸡' }, { en: 'duck', cn: '鸭子' }, { en: 'cow', cn: '奶牛' }, { en: 'sheep', cn: '绵羊' }, { en: 'horse', cn: '马' }, { en: 'panda', cn: '熊猫' }, { en: 'zebra', cn: '斑马' }, { en: 'kangaroo', cn: '袋鼠' }, { en: 'dolphin', cn: '海豚' }, { en: 'scary', cn: '吓人的' }, { en: 'huge', cn: '巨大的' }, { en: 'dangerous', cn: '危险的' }, { en: 'friendly', cn: '友好的' }, { en: 'lovely', cn: '可爱的' }, { en: 'cute', cn: '可爱的' }, { en: 'fast', cn: '快的' }, { en: 'slow', cn: '慢的' }, { en: 'strong', cn: '强壮的' }, { en: 'small', cn: '小的' }, { en: 'big', cn: '大的' }, { en: 'tall', cn: '高的' }, { en: 'short', cn: '矮的' }, { en: 'long', cn: '长的' }, { en: 'furry', cn: '毛茸茸的' }, { en: 'funny', cn: '滑稽的' }, { en: 'smart', cn: '聪明的' }, { en: 'lazy', cn: '懒惰的' }, { en: 'noisy', cn: '吵闹的' }, { en: 'save', cn: '救' }, { en: 'carry', cn: '拿；搬' }, { en: 'forest', cn: '森林' }, { en: 'neck', cn: '脖子' }, { en: 'trunk', cn: '象鼻' }, { en: 'fur', cn: '毛皮' }, { en: 'pick', cn: '捡' }, { en: 'guess', cn: '猜测' }, { en: 'sea', cn: '海' }, { en: 'ivory', cn: '象牙' }, { en: 'care', cn: '照顾' }, { en: 'feed', cn: '喂养' }, { en: 'pet', cn: '宠物' }, { en: 'look at', cn: '看' }, { en: 'pick up', cn: '捡起' }, { en: 'come from', cn: '来自' }, { en: 'take care of', cn: '照顾' }, { en: 'be friendly to', cn: '对…友好' }, { en: 'be scared of', cn: '害怕…' }, { en: 'put ... in', cn: '把…放进' }, { en: 'a lot of', cn: '许多' }, { en: 'in danger', cn: '处于危险中' }, { en: 'look like', cn: '看起来像' }, { en: 'play with', cn: '和…玩' }],
                         '2': [{ en: 'rule', cn: '规则' }, { en: 'order', cn: '秩序' }, { en: 'follow', cn: '遵循' }, { en: 'arrive', cn: '到达' }, { en: 'hallway', cn: '走廊' }, { en: 'uniform', cn: '校服' }, { en: 'litter', cn: '垃圾' }, { en: 'polite', cn: '有礼貌的' }, { en: 'respect', cn: '尊敬' }, { en: 'quietly', cn: '安静地' }, { en: 'everything', cn: '每件事' }, { en: 'jacket', cn: '夹克衫' }, { en: 'late', cn: '迟到' }, { en: 'on time', cn: '准时' }, { en: 'listen', cn: '听' }, { en: 'fight', cn: '打架' }, { en: 'sorry', cn: '抱歉' }, { en: 'outside', cn: '在外面' }, { en: 'wear', cn: '穿' }, { en: 'important', cn: '重要的' }, { en: 'bring', cn: '带来' }, { en: 'quiet', cn: '安静的' }, { en: 'remember', cn: '记住' }, { en: 'keep', cn: '保持' }, { en: 'learn', cn: '学习' }, { en: 'classroom', cn: '教室' }, { en: 'hall', cn: '大厅' }, { en: 'library', cn: '图书馆' }, { en: 'dining hall', cn: '餐厅' }, { en: 'break', cn: '休息' }, { en: 'noise', cn: '噪音' }, { en: 'run', cn: '跑' }, { en: 'eat', cn: '吃' }, { en: 'talk', cn: '说话' }, { en: 'copy', cn: '抄袭' }, { en: 'homework', cn: '家庭作业' }, { en: 'student', cn: '学生' }, { en: 'must', cn: '必须' }, { en: 'must not', cn: '禁止' }, { en: 'follow the rules', cn: '遵守规则' }, { en: 'in class', cn: '在课堂上' }, { en: 'listen to', cn: '听…' }, { en: 'hand in', cn: '交上' }, { en: 'wear a uniform', cn: '穿校服' }, { en: 'be late for', cn: '迟到' }, { en: 'be quiet', cn: '保持安静' }, { en: 'have to', cn: '不得不' }, { en: 'be sorry for', cn: '为…抱歉' }, { en: 'remember to do', cn: '记得做某事' }, { en: 'keep quiet', cn: '保持安静' }, { en: 'no eating', cn: '禁止饮食' }, { en: 'no talking', cn: '禁止说话' }, { en: 'no running', cn: '禁止奔跑' }, { en: 'talk quietly', cn: '小声说话' }, { en: 'in the hallway', cn: '在走廊里' }, { en: 'in the classroom', cn: '在教室里' }],
-                        '3': [{ en: 'fit', cn: '健康的' }, { en: 'baseball', cn: '棒球' }, { en: 'glove', cn: '手套' }, { en: 'mat', cn: '垫子' }, { en: 'rope', cn: '绳子' }, { en: 'jump rope', cn: '跳绳' }, { en: 'racket', cn: '球拍' }, { en: 'hardly', cn: '几乎不' }, { en: 'ever', cn: '曾经' }, { en: 'badminton', cn: '羽毛球' }, { en: 'volleyball', cn: '排球' }, { en: 'jog', cn: '慢跑' }, { en: 'exercise', cn: '锻炼' }, { en: 'strong', cn: '强壮的' }, { en: 'heavy', cn: '重的' }, { en: 'practise', cn: '练习' }, { en: 'sleep', cn: '睡觉' }, { en: 'encourage', cn: '鼓励' }, { en: 'once', cn: '一次' }, { en: 'twice', cn: '两次' }, { en: 'often', cn: '经常' }, { en: 'always', cn: '总是' }, { en: 'team', cn: '队' }, { en: 'usually', cn: '通常' }, { en: 'never', cn: '从不' }, { en: 'tired', cn: '疲劳的' }, { en: 'basketball', cn: '篮球' }, { en: 'soccer', cn: '足球' }, { en: 'tennis', cn: '网球' }, { en: 'swim', cn: '游泳' }, { en: 'cycle', cn: '骑自行车' }, { en: 'hour', cn: '小时' }, { en: 'day', cn: '天' }, { en: 'week', cn: '周' }, { en: 'month', cn: '月' }, { en: 'time', cn: '时间' }, { en: 'seldom', cn: 'adv. 不常；很少' }, { en: 'body', cn: '身体' }, { en: 'mind', cn: '头脑' }, { en: 'healthy', cn: '健康的' }, { en: 'unhealthy', cn: '不健康的' }, { en: 'life', cn: '生活' }, { en: 'play badminton', cn: '打羽毛球' }, { en: 'how often', cn: '多久一次' }, { en: 'once a week', cn: '每周一次' }, { en: 'twice a week', cn: '每周两次' }, { en: 'go to bed', cn: '上床睡觉' }, { en: 'be good for', cn: '对…有益' }, { en: 'stay healthy', cn: '保持健康' }, { en: 'be tired', cn: '感到疲劳' }, { en: 'play basketball', cn: '打篮球' }, { en: 'go swimming', cn: '去游泳' }, { en: 'every day', cn: '每天' }, { en: 'not ... at all', cn: '一点也不' }, { en: 'hardly ever', cn: '几乎不' }, { en: 'how many hours', cn: '多少小时' }, { en: 'maybe', cn: '也许' }, { en: 'few', cn: '不多；很少' }, { en: 'double', cn: '加倍；是……的两倍' }, { en: 'keep fit', cn: '保持健康' }],
-                        '4': [{ en: 'watermelon', cn: '西瓜' }, { en: 'bean', cn: '豆' }, { en: 'chip', cn: '炸薯条' }, { en: 'taste', cn: '味道' }, { en: 'dish', cn: '一道菜' }, { en: 'choice', cn: '选择' }, { en: 'meal', cn: '一餐' }, { en: 'pear', cn: '梨' }, { en: 'salt', cn: '盐' }, { en: 'fat', cn: '脂肪' }, { en: 'weight', cn: '体重' }, { en: 'cause', cn: '导致' }, { en: 'delicious', cn: '美味的' }, { en: 'sweet', cn: '甜的' }, { en: 'sour', cn: '酸的' }, { en: 'salad', cn: '沙拉' }, { en: 'soup', cn: '汤' }, { en: 'chicken', cn: '鸡肉' }, { en: 'beef', cn: '牛肉' }, { en: 'fish', cn: '鱼' }, { en: 'noodle', cn: '面条' }, { en: 'rice', cn: '米饭' }, { en: 'bread', cn: '面包' }, { en: 'egg', cn: '鸡蛋' }, { en: 'milk', cn: '牛奶' }, { en: 'hungry', cn: '饿的' }, { en: 'restaurant', cn: '餐馆' }, { en: 'menu', cn: '菜单' }, { en: 'healthy', cn: '健康的' }, { en: 'tomato', cn: '西红柿' }, { en: 'potato', cn: '土豆' }, { en: 'carrot', cn: '胡萝卜' }, { en: 'apple', cn: '苹果' }, { en: 'banana', cn: '香蕉' }, { en: 'orange', cn: '橙子' }, { en: 'grape', cn: '葡萄' }, { en: 'strawberry', cn: '草莓' }, { en: 'onion', cn: '洋葱' }, { en: 'cabbage', cn: '卷心菜' }, { en: 'healthily', cn: '健康地' }, { en: 'colour', cn: '颜色' }, { en: 'oil', cn: '油' }, { en: 'sugar', cn: '糖' }, { en: 'builder', cn: '建造者' }, { en: 'grow', cn: '成长' }, { en: 'a balanced diet', cn: '均衡饮食' }, { en: 'be hungry', cn: '饿了' }, { en: 'too much', cn: '太多' }, { en: 'have breakfast', cn: '吃早餐' }, { en: 'have lunch', cn: '吃午餐' }, { en: 'have dinner', cn: '吃晚餐' }, { en: 'be full', cn: '饱了' }, { en: 'a piece of', cn: '一片/一块' }, { en: 'at the table', cn: '在餐桌旁' }, { en: 'be bad for', cn: '对…有害' }, { en: 'healthy food', cn: '健康食品' }, { en: 'stay away from', cn: '远离' }, { en: 'be important for', cn: '对…重要' }, { en: 'all the time', cn: '一直' }, { en: 'need to', cn: '需要' }, { en: 'give up', cn: '放弃' }, { en: 'go on a diet', cn: '节食' }, { en: 'try to be', cn: '努力成为' }, { en: 'how much', cn: '多少（不可数）' }, { en: 'one or two', cn: '一两个' }],
-                        '5': [{ en: 'right now', cn: '现在' }, { en: 'ride', cn: '骑' }, { en: 'moment', cn: '片刻' }, { en: 'at the moment', cn: '此刻' }, { en: 'work on', cn: '从事' }, { en: 'dragon', cn: '龙' }, { en: 'festival', cn: '节日' }, { en: 'hold', cn: '拿着；举行' }, { en: 'hold on', cn: '等一等' }, { en: 'voice', cn: '嗓音' }, { en: 'race', cn: '比赛' }, { en: 'darling', cn: '亲爱的' }, { en: 'message', cn: '消息' }, { en: 'take a message', cn: '捎个口信' }, { en: 'leave a message', cn: '留个口信' }, { en: 'call back', cn: '回电话' }, { en: 'kick', cn: '踢' }, { en: 'forward', cn: '向前' }, { en: 'look forward to', cn: '期待' }, { en: 'skate', cn: '滑冰' }, { en: 'happen', cn: '发生' }, { en: 'time zone', cn: '时区' }, { en: 'around the world', cn: '世界各地' }, { en: 'rush', cn: '冲' }, { en: 'in a hurry', cn: '匆忙' }, { en: 'shine', cn: '照耀' }, { en: 'brightly', cn: '明亮地' }, { en: 'colourful', cn: '色彩鲜艳的' }, { en: 'slowly', cn: '缓慢地' }, { en: 'such as', cn: '例如' }, { en: 'painting', cn: '绘画' }, { en: 'market', cn: '市场' }, { en: 'side by side', cn: '并排地' }, { en: 'subway', cn: '地铁' }, { en: 'bright', cn: '明亮的' }, { en: 'drop', cn: '落下' }, { en: 'passenger', cn: '乘客' }, { en: 'moon', cn: '月亮' }, { en: 'king', cn: '国王' }, { en: 'queen', cn: '王后' }, { en: 'light', cn: '灯；轻的' }, { en: 'earth', cn: '地球' }, { en: 'circle', cn: '圆' }, { en: 'round', cn: '圆的' }, { en: 'half', cn: '一半' }, { en: 'shape', cn: '形状' }, { en: 'describe', cn: '描述' }, { en: 'go up', cn: '上升' }, { en: 'come down', cn: '下降' }, { en: 'turn on', cn: '打开' }, { en: 'turn off', cn: '关闭' }, { en: 'put on', cn: '穿上' }, { en: 'in the sky', cn: '在天空中' }, { en: 'at night', cn: '在晚上' }, { en: 'go to sleep', cn: '入睡' }, { en: 'send ... to', cn: '把…寄/发送到' }],
-                        '6': [{ en: 'rain or shine', cn: '不论雨晴' }, { en: 'affect', cn: '影响' }, { en: 'dry', cn: '干的' }, { en: 'lightning', cn: '闪电' }, { en: 'stormy', cn: '暴风雨的' }, { en: 'north', cn: '北方' }, { en: 'centre', cn: '中心' }, { en: 'stay in', cn: '待在家里' }, { en: 'temperature', cn: '温度' }, { en: 'degree', cn: '度' }, { en: 'sunny', cn: '阳光充足的' }, { en: 'cloudy', cn: '多云的' }, { en: 'rainy', cn: '下雨的' }, { en: 'windy', cn: '有风的' }, { en: 'snowy', cn: '下雪的' }, { en: 'hot', cn: '热的' }, { en: 'cold', cn: '冷的' }, { en: 'warm', cn: '温暖的' }, { en: 'cool', cn: '凉爽的' }, { en: 'spring', cn: '春天' }, { en: 'summer', cn: '夏天' }, { en: 'autumn', cn: '秋天' }, { en: 'winter', cn: '冬天' }, { en: 'umbrella', cn: '雨伞' }, { en: 'lucky', cn: '幸运的' }, { en: 'tour', cn: '旅行' }, { en: 'sunbathe', cn: '晒太阳' }, { en: 'mountain', cn: '山' }, { en: 'cloud', cn: '云' }, { en: 'wind', cn: '风' }, { en: 'feel', cn: '感觉' }, { en: 'rain', cn: '雨' }, { en: 'snow', cn: '雪' }, { en: 'weather', cn: '天气' }, { en: 'sun', cn: '太阳' }, { en: 'sky', cn: '天空' }, { en: 'remember', cn: '记得' }, { en: 'bring', cn: '带来' }, { en: 'south', cn: '南方' }, { en: 'east', cn: '东方' }, { en: 'west', cn: '西方' }, { en: 'might', cn: '可能' }, { en: 'maybe', cn: '也许' }, { en: 'probably', cn: '大概' }, { en: 'raincoat', cn: '雨衣' }, { en: 'scarf', cn: '围巾' }, { en: 'gloves', cn: '手套' }, { en: 'sunglasses', cn: '太阳镜' }, { en: 'wait for', cn: '等待' }, { en: 'put on', cn: '穿上' }, { en: 'take off', cn: '脱下' }, { en: 'go outside', cn: '出门' }, { en: 'be lucky to', cn: '幸运地' }, { en: 'go on a tour', cn: '去旅行' }, { en: 'at the centre of', cn: '在…中心' }, { en: 'in the north', cn: '在北方' }, { en: 'in the south', cn: '在南方' }, { en: 'what is the weather like', cn: '天气怎么样' }, { en: 'be going to', cn: '将要' }, { en: 'take an umbrella', cn: '带把伞' }, { en: 'it might rain', cn: '可能会下雨' }, { en: 'play in the snow', cn: '在雪里玩' }, { en: 'go sunbathing', cn: '去晒太阳' }, { en: 'fly a kite', cn: '放风筝' }, { en: 'make a snowman', cn: '堆雪人' }, { en: 'in different places', cn: '在不同的地方' }, { en: 'the best season', cn: '最好的季节' }],
+                        '3': [{ en: 'fit', cn: '健康的' }, { en: 'baseball', cn: '棒球' },  { en: 'glove', cn: '(手指分开的) 手套' },
+  { en: 'mat', cn: '(运动用的) 垫子' },
+  { en: 'rope', cn: '绳子; 粗绳' },
+  { en: 'jump rope', cn: '跳绳 (运动)' },
+  { en: 'racket', cn: '球拍' },
+  { en: 'hardly', cn: '几乎不; 几乎没有' },
+  { en: 'ever', cn: '从来; 曾经' },
+  { en: 'hardly ever', cn: '几乎从不' },
+  { en: 'once', cn: '一次; 曾经' },
+  { en: 'twice', cn: '两次; 两倍' },
+  { en: 'mine', cn: '我的(所有物)' },
+  { en: 'hers', cn: '她的(所有物)' },
+  { en: 'maybe', cn: '也许; 大概' },
+  { en: 'well-used', cn: '使用得多的' },
+  { en: 'practice', cn: '练习; 实践' },
+  { en: 'perfect', cn: '完美的; 极好的' },
+  { en: 'seldom', cn: '很少; 不常' },
+  { en: 'badminton', cn: '羽毛球运动' },
+  { en: 'double', cn: '两倍; 成双的; 两倍的' },
+  { en: 'sometime', cn: '在某个时候' },
+  { en: 'volleyball', cn: '排球 (运动)' },
+  { en: 'theirs', cn: '他们的' },
+  { en: 'jog', cn: '慢跑' },
+  { en: 'few', cn: '很少的; 几乎没有' },
+  { en: 'a few', cn: '少数; 几个' },
+  { en: 'excuse', cn: '原谅; 宽恕' },
+  { en: 'excuse me', cn: '劳驾; 请原谅' },
+  { en: 'over there', cn: '那边' },
+  { en: 'just', cn: '只是; 正好' },
+  { en: 'T-shirt', cn: 'T恤衫' },
+  { en: 'belong', cn: '应在 (某处)' },
+  { en: 'belong to', cn: '属于 (某人)' },
+  { en: 'working', cn: '工作的' },
+  { en: 'working day', cn: '工作日' },
+  { en: 'full of', cn: '有许多; 充满' },
+  { en: 'energy', cn: '精力; 能量' },
+  { en: 'group', cn: '组; 群' },
+  { en: 'skateboard', cn: '滑板' },
+  { en: 'encourage', cn: '鼓励; 激励' },
+  { en: 'trick', cn: '技巧; 戏法' },
+  { en: 'succeed', cn: '成功; 达到目标' },
+  { en: 'skateboarding', cn: '滑板运动' },
+  { en: 'goal', cn: '目标; 目的' },
+  { en: 'sit-up', cn: '仰卧起坐' },
+  { en: 'work out', cn: '锻炼' },
+  { en: 'app', cn: '应用程序' },
+  { en: 'progress', cn: '进步; 进展' },
+  { en: 'match', cn: '比赛; 竞赛' },
+  { en: 'team', cn: '队; 组' },
+  { en: 'ours', cn: '我们的' },
+  { en: 'lose', cn: '输掉; 丢失' },
+  { en: 'teenager', cn: '青少年' },
+  { en: 'over', cn: '在另一边; 在……上方; 超过' },
+  { en: 'near', cn: '接近; 近的' },
+  { en: 'air', cn: '空气' },
+  { en: 'evening', cn: '晚上' },
+  { en: 'tired', cn: '累的; 疲倦的' },
+  { en: 'win', cn: '获胜; 赢' },
+  { en: 'body', cn: '身体' },
+  { en: 'try', cn: '尝试; 努力' }],
+                        '4': [{ en: 'improve', cn: '改进；改善' },
+  { en: 'watermelon', cn: '西瓜' },
+  { en: 'habit', cn: '习惯' },
+  { en: 'cabbage', cn: '卷心菜' },
+  { en: 'fast food', cn: '快餐' },
+  { en: 'mutton', cn: '羊肉' },
+  { en: 'salt', cn: '盐' },
+  { en: 'cookie', cn: '曲奇饼' },
+  { en: 'fat', cn: '脂肪' },
+  { en: 'onion', cn: '洋葱；葱头' },
+  { en: 'put on', cn: '增加；穿上' },
+  { en: 'dumpling', cn: '饺子' },
+  { en: 'weight', cn: '体重；重量' },
+  { en: 'coffee', cn: '咖啡' },
+  { en: 'hamburger', cn: '汉堡包' },
+  { en: 'bean', cn: '豆' },
+  { en: 'cause', cn: '造成；导致' },
+  { en: 'chip', cn: '炸薯条' },
+  { en: 'heart', cn: '心脏；中心' },
+  { en: 'fish and chips', cn: '炸鱼薯条' },
+  { en: 'balanced', cn: '均衡的；平衡的' },
+  { en: 'salad', cn: '沙拉；色拉' },
+  { en: 'too ... to', cn: '太…以至于不能' },
+  { en: 'porridge', cn: '粥；麦片粥' },
+  { en: 'sleepy', cn: '困倦的；想睡的' },
+  { en: 'waiter', cn: '(男)服务员' },
+  { en: 'after all', cn: '毕竟；终归' },
+  { en: 'What about ...?', cn: '...怎么样?' },
+  { en: 'away', cn: '离开；在别处' },
+  { en: 'taste', cn: '尝；味道' },
+  { en: 'poor', cn: '不好的；贫穷的；可怜的' },
+  { en: 'result', cn: '结果；成果' },
+  { en: 'anything', cn: '某事物；任何事物' },
+  { en: 'article', cn: '文章；冠词' },
+  { en: 'dish', cn: '一道菜；盘子' },
+  { en: 'common', cn: '共同的；普通的' },
+  { en: 'choice', cn: '选择' },
+  { en: 'among', cn: '在…中；…之一' },
+  { en: 'meal', cn: '一顿所吃的食物；一餐' },
+  { en: 'soft', cn: '柔软的；柔和的' },
+  { en: 'pork', cn: '猪肉' },
+  { en: 'soft drink', cn: '软饮料' },
+  { en: 'strawberry', cn: '草莓' },
+  { en: 'enough', cn: '足够的；充足的' },
+  { en: 'menu', cn: '菜单' },
+  { en: 'advice', cn: '建议；劝告' },
+  { en: 'customer', cn: '顾客' },
+  { en: 'serve', cn: '提供；服务' },
+  { en: 'thirsty', cn: '渴的' },
+  { en: 'waitress', cn: '女服务员' },
+  { en: 'pear', cn: '梨' },
+  { en: 'too much', cn: '太多' },
+  { en: 'sir', cn: '先生' },
+  { en: 'sugar', cn: '糖' },
+  { en: 'Gongbao chicken', cn: '宫保鸡丁' },
+  { en: 'go with', cn: '搭配；相配' },
+  { en: 'America', cn: '美国；美洲' },
+  { en: 'instead', cn: '代替；反而' },
+  { en: 'tea', cn: '茶；茶叶' },
+  { en: 'bread', cn: '面包' },
+  { en: 'ice cream', cn: '冰激凌' },
+  { en: 'vegetable', cn: '蔬菜' },
+  { en: 'soup', cn: '汤' },
+  { en: 'rice', cn: '米饭；大米' },
+  { en: 'cup', cn: '杯' },
+  { en: 'banana', cn: '香蕉' },
+  { en: 'hungry', cn: '饥饿的' },
+  { en: 'doctor', cn: '医生' },
+  { en: 'young', cn: '年轻的' },
+  { en: 'Dongpo pork', cn: '东坡肉' }],
+                        '5': [{ en: 'right now', cn: '现在；立刻' },
+{ en: 'ride', cn: '骑' },
+{ en: 'moment', cn: '某个时刻；片刻；瞬间' },
+{ en: 'at the moment', cn: '现在；此刻' },
+{ en: 'work on', cn: '做；从事' },
+{ en: 'dragon', cn: '龙' },
+{ en: 'festival', cn: '节日' },
+{ en: 'hold', cn: '拿着；抓住' },
+{ en: 'hold on', cn: '别挂断电话；等一等' },
+{ en: 'voice', cn: '嗓音；声音' },
+{ en: 'race', cn: '比赛；竞赛' },
+{ en: 'darling', cn: '亲爱的；宝贝' },
+{ en: 'somebody', cn: '某人；有人' },
+{ en: 'could', cn: '能；可以' },
+{ en: 'message', cn: '消息；信息' },
+{ en: 'take a message', cn: '捎个口信' },
+{ en: 'leave a message', cn: '留个口信' },
+{ en: 'call back', cn: '回电话' },
+{ en: 'kick', cn: '踢；踹' },
+{ en: 'wow', cn: '哇；呀' },
+{ en: 'online', cn: '在线的' },
+{ en: 'shuttlecock', cn: '羽毛球' },
+{ en: 'sight', cn: '名胜；风景；视力' },
+{ en: 'exam', cn: '考试' },
+{ en: 'hope', cn: '希望' },
+{ en: 'forward', cn: '向前' },
+{ en: 'look forward to', cn: '盼望' },
+{ en: 'skate', cn: '滑冰' },
+{ en: 'happen', cn: '发生' },
+{ en: 'zone', cn: '地区；地带；区域' },
+{ en: 'around the world', cn: '世界各地' },
+{ en: 'rush', cn: '冲；奔' },
+{ en: 'in a hurry', cn: '匆忙' },
+{ en: 'shine', cn: '发光；照耀' },
+{ en: 'brightly', cn: '明亮地' },
+{ en: 'colourful', cn: '色彩鲜艳的' },
+{ en: 'slowly', cn: '缓慢地' },
+{ en: 'such', cn: '这样的；那样的' },
+{ en: 'such as', cn: '例如' },
+{ en: 'painting', cn: '绘画作品；绘画；油画' },
+{ en: 'market', cn: '市场' },
+{ en: 'side', cn: '边；侧' },
+{ en: 'side by side', cn: '并排；并肩地' },
+{ en: 'subway', cn: '地铁' },
+{ en: 'bright', cn: '明亮的；闪烁的；耀眼的' },
+{ en: 'drop', cn: '落下；滴' },
+{ en: 'drop off', cn: '把某人送到某处' },
+{ en: 'passenger', cn: '乘客' },
+{ en: 'central', cn: '中心的；中央的' },
+{ en: 'explain', cn: '解释；说明' },
+{ en: 'take part in', cn: '参加' },
+{ en: 'tour', cn: '旅行；旅游' },
+{ en: 'sunshine', cn: '阳光' },
+{ en: 'drive', cn: '开车；驾驶' },
+{ en: 'rush hour', cn: '交通高峰期' },
+{ en: 'Adam', cn: '亚当' },
+{ en: 'New York', cn: '纽约' },
+{ en: 'USA', cn: '美国' },
+{ en: 'Central Park', cn: '中央公园' },
+{ en: 'wash', cn: '洗；洗澡' },
+{ en: 'free', cn: '空闲的；免费的' },
+{ en: 'holiday', cn: '假期' },
+{ en: 'boat', cn: '小船；小艇' },
+{ en: 'supermarket', cn: '超市' },
+{ en: 'boy', cn: '男孩' },
+{ en: 'city', cn: '城市' },
+{ en: 'street', cn: '街道' },
+{ en: 'light', cn: '灯；光；轻的' },
+{ en: 'move', cn: '移动；搬动' },
+{ en: 'river', cn: '河' },
+{ en: 'bag', cn: '袋子' },
+{ en: 'by', cn: '靠近；在…旁边' },
+{ en: 'wonderful', cn: '精彩的；绝妙的' },
+{ en: 'taxi', cn: '出租车' },
+{ en: 'sun', cn: '太阳' },
+{ en: 'Dragon Boat Festival', cn: '端午节' }],
+                        '6': [{ en: 'rain or shine', cn: '不管发生什么事' },
+  { en: 'affect', cn: '影响' },
+  { en: 'dry', cn: '干的；干旱的' },
+  { en: 'lightning', cn: '闪电' },
+  { en: 'stormy', cn: '有暴风雨（或暴风雪）的' },
+  { en: 'north', cn: '北部；北；北方' },
+  { en: 'west', cn: '西部；西；西方' },
+  { en: 'south', cn: '南部；南；南方' },
+  { en: 'east', cn: '东部；东；东方' },
+  { en: 'stay in', cn: '待在家里；没有外出' },
+  { en: 'lucky', cn: '运气好的；带来好运的' },
+  { en: 'lucky you', cn: '你真幸运' },
+  { en: 'sunbathe', cn: '沐日光浴；晒太阳' },
+  { en: 'some day', cn: '将来；有朝一日' },
+  { en: 'temperature', cn: '温度' },
+  { en: 'snowman', cn: '雪人' },
+  { en: 'heavily', cn: '大量地；沉重地' },
+  { en: 'snowy', cn: '下雪的；雪白的' },
+  { en: 'beach volleyball', cn: '沙滩排球' },
+  { en: 'high', cn: '高' },
+  { en: 'freezing', cn: '极冷的；冰冻的' },
+  { en: 'tourist', cn: '旅行者；观光客' },
+  { en: 'mount', cn: '山；山峰' },
+  { en: 'cloud', cn: '云；云彩' },
+  { en: 'feel like', cn: '感觉像' },
+  { en: 'magical', cn: '魔法的；神奇的' },
+  { en: 'rock', cn: '岩石' },
+  { en: 'rest', cn: '休息；剩余部分' },
+  { en: 'area', cn: '场地；地区' },
+  { en: 'rest area', cn: '休息区' },
+  { en: 'make progress', cn: '取得进展' },
+  { en: 'although', cn: '虽然；尽管' },
+  { en: 'still', cn: '还；仍然' },
+  { en: 'in high spirits', cn: '情绪高涨；兴高采烈' },
+  { en: 'experience', cn: '经历；经验' },
+  { en: 'through', cn: '穿过；凭借' },
+  { en: 'glad', cn: '高兴的' },
+  { en: 'peak', cn: '山顶；顶点' },
+  { en: 'grey', cn: '灰色的' },
+  { en: 'because of', cn: '因为' },
+  { en: 'fog', cn: '雾' },
+  { en: 'ground', cn: '地面' },
+  { en: 'wet', cn: '湿的' },
+  { en: 'tiring', cn: '令人疲倦的；累人的' },
+  { en: 'seem', cn: '似乎；好像' },
+  { en: 'sunlight', cn: '阳光；日光' },
+  { en: 'at the top', cn: '在顶部；在顶端' },
+  { en: 'thought', cn: '想法' },
+  { en: 'mountain', cn: '山；高山' },
+  { en: 'at the start', cn: '开始；起初' },
+  { en: 'end', cn: '末尾；结束' },
+  { en: 'at the end', cn: '最后；在末尾' },
+  { en: 'storm', cn: '暴风雨；暴风雪' },
+  { en: 'pour', cn: '倾倒；倒出' },
+  { en: 'wind', cn: '风' },
+  { en: 'shout', cn: '喊叫；呼唤' },
+  { en: 'run after', cn: '追逐' },
+  { en: 'Anna', cn: '安娜' },
+  { en: 'John', cn: '约翰' },
+  { en: 'Stockholm', cn: '斯德哥尔摩' },
+  { en: 'Mount Huangshan', cn: '黄山' },
+  { en: 'Bright Peak', cn: '光明顶' },
+  { en: 'rain', cn: '雨；下雨' },
+  { en: 'weather', cn: '天气；气象' },
+  { en: 'cloudy', cn: '多云的；阴天的' },
+  { en: 'windy', cn: '多风的；风大的' },
+  { en: 'sunny', cn: '阳光充足的；开朗的' },
+  { en: 'hometown', cn: '家乡；故乡' },
+  { en: 'sad', cn: '伤心的；难过的' },
+  { en: 'beach', cn: '海滩；海滨' },
+  { en: 'snow', cn: '下雪；雪' },
+  { en: 'winter', cn: '冬季；冬天' },
+  { en: 'summer', cn: '夏季；夏天' },
+  { en: 'sweater', cn: '毛衣' },
+  { en: 'kite', cn: '风筝' },
+  { en: 'spring', cn: '春季；春天' },
+  { en: 'season', cn: '季节' },
+  { en: 'umbrella', cn: '伞' },
+  { en: 'dirty', cn: '脏脏的' },
+  { en: 'top', cn: '顶部；顶端；顶部的' },
+  { en: 'man', cn: '男人' },
+  { en: 'angry', cn: '愤怒的；生气的' }],
                         '7': [{ en: 'meet up', cn: '相聚' }, { en: 'museum', cn: '博物馆' }, { en: 'exhibition', cn: '展览' }, { en: 'direction', cn: '方向' }, { en: 'trip', cn: '旅行' }, { en: 'wastewater', cn: '废水' }, { en: 'plant', cn: '工厂' }, { en: 'special', cn: '特别的' }, { en: 'remember', cn: '记得' }, { en: 'forget', cn: '忘记' }, { en: 'yesterday', cn: '昨天' }, { en: 'excited', cn: '兴奋的' }, { en: 'proud', cn: '自豪的' }, { en: 'surprised', cn: '惊讶的' }, { en: 'holiday', cn: '假期' }, { en: 'celebration', cn: '庆祝' }, { en: 'party', cn: '聚会' }, { en: 'had', cn: '有（过去式）' }, { en: 'went', cn: '去（过去式）' }, { en: 'came', cn: '来（过去式）' }, { en: 'saw', cn: '看见（过去式）' }, { en: 'ate', cn: '吃（过去式）' }, { en: 'bought', cn: '买（过去式）' }, { en: 'gave', cn: '给（过去式）' }, { en: 'learnt', cn: '学习（过去式）' }, { en: 'taught', cn: '教（过去式）' }, { en: 'got', cn: '到达（过去式）' }, { en: 'read', cn: '读（过去式）' }, { en: 'did', cn: '做（过去式）' }, { en: 'made', cn: '制作（过去式）' }, { en: 'told', cn: '告诉（过去式）' }, { en: 'met', cn: '遇见（过去式）' }, { en: 'sat', cn: '坐（过去式）' }, { en: 'spent', cn: '花费（过去式）' }, { en: 'took', cn: '拿（过去式）' }, { en: 'watched', cn: '观看' }, { en: 'played', cn: '玩' }, { en: 'visited', cn: '参观' }, { en: 'wanted', cn: '想要' }, { en: 'talked', cn: '交谈' }, { en: 'asked', cn: '问' }, { en: 'answered', cn: '回答' }, { en: 'finished', cn: '完成' }, { en: 'started', cn: '开始' }, { en: 'walked', cn: '走' }, { en: 'climbed', cn: '爬' }, { en: 'touched', cn: '触摸' }, { en: 'looked', cn: '看' }, { en: 'heard', cn: '听见' }, { en: 'thought', cn: '想' }, { en: 'left', cn: '离开' }, { en: 'lost', cn: '丢失' }, { en: 'found', cn: '发现' }, { en: 'shop', cn: '商店' }, { en: 'friend', cn: '朋友' }, { en: 'expensive', cn: '贵的' }, { en: 'cheap', cn: '便宜的' }, { en: 'tired', cn: '累的' }, { en: 'happy', cn: '开心的' }, { en: 'sad', cn: '伤心的' }, { en: 'early', cn: '早的' }, { en: 'fun', cn: '乐趣' }, { en: 'go on a trip', cn: '去旅行' }, { en: 'have a party', cn: '举办聚会' }, { en: 'be excited', cn: '感到兴奋' }, { en: 'be proud of', cn: '为…自豪' }, { en: 'be surprised', cn: '感到惊讶' }, { en: 'have a good time', cn: '玩得开心' }, { en: 'take photos', cn: '拍照' }, { en: 'go shopping', cn: '去购物' }, { en: 'watch a film', cn: '看电影' }, { en: 'last week', cn: '上周' }, { en: 'last night', cn: '昨晚' }, { en: 'last year', cn: '去年' }, { en: 'the day before yesterday', cn: '前天' }, { en: 'yesterday morning', cn: '昨天早上' }, { en: 'yesterday afternoon', cn: '昨天下午' }, { en: 'go to the museum', cn: '去博物馆' }, { en: 'go to the park', cn: '去公园' }, { en: 'have fun', cn: '玩得开心' }, { en: 'walk around', cn: '四处走走' }, { en: 'all day', cn: '一整天' }, { en: 'have a meeting', cn: '开会' }, { en: 'have a cold', cn: '感冒' }],
                         '8': [{ en: 'upon', cn: '在…之上' }, { en: 'once upon a time', cn: '从前' }, { en: 'bite', cn: '咬' }, { en: 'net', cn: '网' }, { en: 'hunter', cn: '猎人' }, { en: 'promise', cn: '承诺' }, { en: 'war', cn: '战争' }, { en: 'neighbour', cn: '邻居' }, { en: 'wise', cn: '明智的' }, { en: 'emperor', cn: '皇帝' }, { en: 'lie', cn: '撒谎' }, { en: 'pretend', cn: '假装' }, { en: 'official', cn: '官员' }, { en: 'silly', cn: '愚蠢的' }, { en: 'decide', cn: '决定' }, { en: 'king', cn: '国王' }, { en: 'artist', cn: '艺术家' }, { en: 'quickly', cn: '快速地' }, { en: 'smile', cn: '微笑' }, { en: 'truth', cn: '真相' }, { en: 'true', cn: '真实的' }, { en: 'story', cn: '故事' }, { en: 'character', cn: '角色' }, { en: 'beginning', cn: '开头' }, { en: 'ending', cn: '结尾' }, { en: 'magic', cn: '魔法' }, { en: 'prince', cn: '王子' }, { en: 'princess', cn: '公主' }, { en: 'queen', cn: '王后' }, { en: 'evil', cn: '邪恶的' }, { en: 'beautiful', cn: '美丽的' }, { en: 'ugly', cn: '丑陋的' }, { en: 'poor', cn: '贫穷的' }, { en: 'rich', cn: '富有的' }, { en: 'happy', cn: '开心的' }, { en: 'sad', cn: '悲伤的' }, { en: 'cry', cn: '哭' }, { en: 'laugh', cn: '笑' }, { en: 'gold', cn: '金子' }, { en: 'silver', cn: '银子' }, { en: 'clothes', cn: '衣服' }, { en: 'stupid', cn: '愚蠢的' }, { en: 'kind', cn: '善良的' }, { en: 'brave', cn: '勇敢的' }, { en: 'afraid', cn: '害怕的' }, { en: 'finish', cn: '完成' }, { en: 'finally', cn: '最后' }, { en: 'live', cn: '生活' }, { en: 'marry', cn: '结婚' }, { en: 'become', cn: '变成' }, { en: 'grow up', cn: '长大' }, { en: 'be angry with', cn: '生…的气' }, { en: 'next to', cn: '在…旁边' }, { en: 'find out', cn: '发现' }, { en: 'come in', cn: '进来' }, { en: 'go away', cn: '走开' }, { en: 'tell a story', cn: '讲故事' }, { en: 'at the beginning of', cn: '在…开头' }, { en: 'at the end of', cn: '在…结尾' }, { en: 'live happily ever after', cn: '从此幸福地生活' }, { en: 'turn ... into', cn: '把…变成' }, { en: 'be made of', cn: '由…制成' }, { en: 'wear new clothes', cn: '穿新衣服' }, { en: 'think about', cn: '思考' }, { en: 'in the forest', cn: '在森林里' }, { en: 'on the way home', cn: '在回家的路上' }, { en: 'be lost', cn: '迷路' }, { en: 'try to do', cn: '努力做某事' }, { en: 'one day', cn: '某一天' }, { en: 'all over the world', cn: '全世界' }, { en: 'knock at', cn: '敲' }, { en: 'fall down', cn: '摔倒' }, { en: 'pick up', cn: '捡起' }, { en: 'laugh at', cn: '嘲笑' }, { en: 'instead of', cn: '而不是' }],
                     }
