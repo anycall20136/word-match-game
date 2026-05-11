@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -9,7 +7,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
     <title>🎯 单词消消乐 - 人教版7-9年级</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
@@ -58,43 +55,14 @@
             opacity: 0.1;
             animation: float 20s infinite ease-in-out;
         }
-        .shape1 {
-            width: 300px;
-            height: 300px;
-            background: var(--primary);
-            top: 10%;
-            left: -5%;
-        }
-        .shape2 {
-            width: 200px;
-            height: 200px;
-            background: var(--accent);
-            top: 60%;
-            right: -3%;
-            animation-delay: -5s;
-        }
-        .shape3 {
-            width: 250px;
-            height: 250px;
-            background: var(--secondary);
-            bottom: -5%;
-            left: 30%;
-            animation-delay: -10s;
-        }
+        .shape1 { width: 300px; height: 300px; background: var(--primary); top: 10%; left: -5%; }
+        .shape2 { width: 200px; height: 200px; background: var(--accent); top: 60%; right: -3%; animation-delay: -5s; }
+        .shape3 { width: 250px; height: 250px; background: var(--secondary); bottom: -5%; left: 30%; animation-delay: -10s; }
         @keyframes float {
-            0%,
-            100% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            25% {
-                transform: translate(50px, 50px) rotate(90deg);
-            }
-            50% {
-                transform: translate(0, 100px) rotate(180deg);
-            }
-            75% {
-                transform: translate(-50px, 50px) rotate(270deg);
-            }
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, 50px) rotate(90deg); }
+            50% { transform: translate(0, 100px) rotate(180deg); }
+            75% { transform: translate(-50px, 50px) rotate(270deg); }
         }
 
         .sound-control {
@@ -105,7 +73,7 @@
             display: flex;
             gap: 6px;
         }
-        .sound-btn {
+        .sound-btn, .voice-btn {
             background: rgba(45, 47, 74, 0.9);
             border: 2px solid rgba(255, 255, 255, 0.2);
             color: var(--text-light);
@@ -119,13 +87,8 @@
             justify-content: center;
             transition: all 0.3s;
         }
-        .sound-btn:hover {
-            transform: scale(1.1);
-            border-color: var(--accent);
-        }
-        .sound-btn.muted {
-            opacity: 0.5;
-        }
+        .sound-btn:hover, .voice-btn:hover { transform: scale(1.1); border-color: var(--accent); }
+        .sound-btn.muted, .voice-btn.muted { opacity: 0.5; }
 
         .sound-wave {
             position: fixed;
@@ -138,9 +101,7 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-        .sound-wave.active {
-            opacity: 1;
-        }
+        .sound-wave.active { opacity: 1; }
         .wave-bar {
             width: 3px;
             height: 18px;
@@ -148,29 +109,14 @@
             border-radius: 2px;
             animation: wave 0.5s ease-in-out infinite;
         }
-        .wave-bar:nth-child(1) {
-            animation-delay: 0s;
-        }
-        .wave-bar:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        .wave-bar:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-        .wave-bar:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-        .wave-bar:nth-child(5) {
-            animation-delay: 0.4s;
-        }
+        .wave-bar:nth-child(1) { animation-delay: 0s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
         @keyframes wave {
-            0%,
-            100% {
-                height: 8px;
-            }
-            50% {
-                height: 25px;
-            }
+            0%, 100% { height: 8px; }
+            50% { height: 25px; }
         }
 
         .container {
@@ -191,14 +137,8 @@
             animation: slideDown 0.6s ease-out;
         }
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .title {
             font-family: 'Fredoka One', cursive;
@@ -216,7 +156,6 @@
             font-weight: 600;
         }
 
-        /* 统计面板 - 行距缩小，标签在数字右边 */
         .stats-panel {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -225,14 +164,8 @@
             animation: fadeIn 0.6s ease-out 0.1s both;
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .stat-card {
             background: linear-gradient(135deg, var(--bg-card), rgba(45, 47, 74, 0.8));
@@ -262,26 +195,9 @@
             transform: translateY(-1px);
             border-color: var(--primary);
         }
-        .stat-icon {
-            font-size: 0.7rem;
-            margin: 0;
-            line-height: 1;
-        }
-        .stat-value {
-            font-size: 0.7rem;
-            font-weight: 900;
-            color: var(--accent);
-            line-height: 1;
-            display: inline;
-        }
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.45rem;
-            font-weight: 600;
-            margin: 0;
-            display: inline;
-            line-height: 1;
-        }
+        .stat-icon { font-size: 0.7rem; margin: 0; line-height: 1; }
+        .stat-value { font-size: 0.7rem; font-weight: 900; color: var(--accent); line-height: 1; display: inline; }
+        .stat-label { color: var(--text-muted); font-size: 0.45rem; font-weight: 600; margin: 0; display: inline; line-height: 1; }
 
         .game-area {
             background: linear-gradient(135deg, rgba(45, 47, 74, 0.9), rgba(26, 27, 46, 0.9));
@@ -304,6 +220,7 @@
             align-items: center;
             margin-bottom: 4px;
             gap: 3px;
+            flex-wrap: wrap;
         }
 
         .selector-row {
@@ -312,13 +229,8 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        .grade-selector,
-        .semester-selector {
-            display: flex;
-            gap: 2px;
-        }
-        .grade-btn,
-        .semester-btn {
+        .grade-selector, .semester-selector { display: flex; gap: 2px; }
+        .grade-btn, .semester-btn {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #aaa;
@@ -328,8 +240,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .grade-btn.active,
-        .semester-btn.active {
+        .grade-btn.active, .semester-btn.active {
             border-color: var(--primary);
             color: #fff;
             background: linear-gradient(135deg, rgba(255, 107, 157, 0.2), var(--bg-card));
@@ -352,10 +263,7 @@
             font-weight: 700;
             transition: all 0.3s;
         }
-        .unit-btn:hover {
-            border-color: var(--accent);
-            transform: translateY(-1px);
-        }
+        .unit-btn:hover { border-color: var(--accent); transform: translateY(-1px); }
         .unit-btn.active {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-color: transparent;
@@ -377,10 +285,7 @@
             gap: 3px;
             white-space: nowrap;
         }
-        .new-game-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(74, 229, 74, 0.4);
-        }
+        .new-game-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(74, 229, 74, 0.4); }
 
         .hint-area {
             background: linear-gradient(135deg, rgba(255, 217, 61, 0.1), rgba(255, 107, 157, 0.1));
@@ -390,11 +295,7 @@
             text-align: center;
             border: 1px dashed rgba(255, 217, 61, 0.3);
         }
-        .hint-text {
-            font-size: 0.7rem;
-            color: var(--warning);
-            font-weight: 700;
-        }
+        .hint-text { font-size: 0.7rem; color: var(--warning); font-weight: 700; }
 
         .word-grid {
             display: grid;
@@ -405,10 +306,7 @@
             align-content: start;
             transition: opacity 0.3s;
         }
-        .word-grid.timer-ended {
-            pointer-events: none;
-            opacity: 0.4;
-        }
+        .word-grid.timer-ended { pointer-events: none; opacity: 0.4; }
         .word-card {
             background: linear-gradient(135deg, var(--bg-card), rgba(45, 47, 74, 0.6));
             border-radius: 12px;
@@ -435,9 +333,7 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-        .word-card:hover::before {
-            opacity: 1;
-        }
+        .word-card:hover::before { opacity: 1; }
         .word-card:hover {
             transform: translateY(-4px) scale(1.02);
             border-color: var(--accent);
@@ -450,13 +346,8 @@
             animation: pulse 0.4s ease;
         }
         @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         .word-card.matched {
             background: linear-gradient(135deg, rgba(74, 229, 74, 0.3), var(--bg-card));
@@ -464,40 +355,18 @@
             animation: matchSuccess 0.5s ease;
         }
         @keyframes matchSuccess {
-            0% {
-                transform: scale(1);
-            }
-            30% {
-                transform: scale(1.12) rotate(4deg);
-            }
-            60% {
-                transform: scale(1.06) rotate(-4deg);
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-            }
+            0% { transform: scale(1); }
+            30% { transform: scale(1.12) rotate(4deg); }
+            60% { transform: scale(1.06) rotate(-4deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
-        .word-card.wrong {
-            animation: shake 0.4s ease;
-            border-color: #FF4757;
-        }
+        .word-card.wrong { animation: shake 0.4s ease; border-color: #FF4757; }
         @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            20% {
-                transform: translateX(-6px);
-            }
-            40% {
-                transform: translateX(6px);
-            }
-            60% {
-                transform: translateX(-6px);
-            }
-            80% {
-                transform: translateX(6px);
-            }
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
         }
         .word-card.hidden {
             opacity: 0;
@@ -529,18 +398,10 @@
             opacity: 0.4;
             transition: all 0.3s;
         }
-        .word-card:hover .speak-icon {
-            opacity: 1;
-            animation: bounce 0.5s ease infinite;
-        }
+        .word-card:hover .speak-icon { opacity: 1; animation: bounce 0.5s ease infinite; }
         @keyframes bounce {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-3px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
         }
 
         .progress-bar {
@@ -567,18 +428,9 @@
             animation: starFloat 1s ease-out forwards;
         }
         @keyframes starFloat {
-            0% {
-                opacity: 1;
-                transform: scale(0) rotate(0deg);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1) rotate(180deg);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.5) rotate(360deg) translateY(-70px);
-            }
+            0% { opacity: 1; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0.5) rotate(360deg) translateY(-70px); }
         }
 
         .combo {
@@ -596,12 +448,8 @@
             box-shadow: 0 6px 20px rgba(255, 217, 61, 0.5);
         }
         @keyframes comboIn {
-            from {
-                transform: scale(0) rotate(-10deg);
-            }
-            to {
-                transform: scale(1) rotate(0deg);
-            }
+            from { transform: scale(0) rotate(-10deg); }
+            to { transform: scale(1) rotate(0deg); }
         }
 
         .encouragement {
@@ -622,167 +470,30 @@
             text-align: center;
         }
         @keyframes popIn {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        /* ========== 手机端强制覆盖 ========== */
         @media (max-width: 768px) {
-            .container {
-                padding: 8px 6px 15px;
-            }
-            .title {
-                font-size: 1.6rem;
-            }
-            .brand {
-                font-size: 0.72rem;
-            }
-            .header {
-                padding: 8px 0 3px;
-            }
-
-            .stats-panel {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 6px !important;
-                margin: 4px 0 !important;
-            }
-            .stat-card {
-                padding: 6px 4px !important;
-                border-radius: 10px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                flex-wrap: wrap !important;
-                gap: 2px !important;
-            }
-            .stat-icon {
-                font-size: 0.85rem !important;
-                margin: 0 !important;
-                line-height: 1 !important;
-            }
-            .stat-value {
-                font-size: 0.9rem !important;
-                display: inline !important;
-                line-height: 1 !important;
-            }
-            .stat-label {
-                font-size: 0.5rem !important;
-                margin: 0 !important;
-                display: inline !important;
-                line-height: 1 !important;
-            }
-
-            .game-area {
-                padding: 10px !important;
-                border-radius: 15px !important;
-                margin: 6px 0 !important;
-            }
-            .game-header {
-                margin-bottom: 6px !important;
-                gap: 5px !important;
-                flex-wrap: wrap !important;
-            }
-
-            .unit-selector {
-                gap: 3px !important;
-            }
-            .unit-btn {
-                padding: 4px 7px !important;
-                font-size: 0.68rem !important;
-                border-radius: 8px !important;
-            }
-
-            .new-game-btn {
-                padding: 6px 12px !important;
-                font-size: 0.78rem !important;
-                border-radius: 8px !important;
-            }
-            #testVoiceBtn {
-                padding: 5px 10px !important;
-                font-size: 0.72rem !important;
-            }
-
-            .word-grid {
-                grid-template-columns: repeat(5, 1fr) !important;
-                gap: 4px !important;
-            }
-            .word-card {
-                padding: 6px 2px !important;
-                border-radius: 8px !important;
-                border-width: 1px !important;
-            }
-            .word-text {
-                font-size: 0.78rem !important;
-                margin-bottom: 1px !important;
-            }
-            .word-type {
-                font-size: 0.52rem !important;
-            }
-            .speak-icon {
-                font-size: 0.65rem !important;
-                top: 2px !important;
-                right: 2px !important;
-            }
-
-            .hint-area {
-                padding: 5px 8px !important;
-                margin-bottom: 6px !important;
-                border-radius: 8px !important;
-            }
-            .hint-text {
-                font-size: 0.8rem !important;
-            }
-
-            .progress-bar {
-                margin-top: 8px !important;
-                height: 4px !important;
-            }
-
-            .encouragement {
-                padding: 15px 24px !important;
-                font-size: 1.1rem !important;
-                border-radius: 15px !important;
-            }
-            .combo {
-                padding: 7px 14px !important;
-                font-size: 0.9rem !important;
-                top: 12% !important;
-            }
-
-            .sound-btn {
-                width: 34px !important;
-                height: 34px !important;
-                font-size: 0.95rem !important;
-            }
-            .sound-control {
-                top: 6px !important;
-                right: 6px !important;
-                gap: 4px !important;
-            }
+            .container { padding: 8px 6px 15px; }
+            .title { font-size: 1.6rem; }
+            .stats-panel { grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 4px 0; }
+            .stat-card { padding: 6px 4px; border-radius: 10px; }
+            .stat-icon { font-size: 0.85rem; }
+            .stat-value { font-size: 0.9rem; }
+            .stat-label { font-size: 0.5rem; }
+            .game-area { padding: 10px; }
+            .word-grid { gap: 4px; }
+            .word-card { padding: 6px 2px; }
+            .word-text { font-size: 0.78rem; }
+            .word-type { font-size: 0.52rem; }
+            .hint-text { font-size: 0.8rem; }
+            .progress-bar { height: 4px; }
         }
 
         @media (max-width: 380px) {
-            .word-grid {
-                grid-template-columns: repeat(4, 1fr) !important;
-            }
-            .word-card {
-                padding: 4px 2px !important;
-            }
-            .word-text {
-                font-size: 0.72rem !important;
-            }
-            .stat-value {
-                font-size: 0.6rem !important;
-            }
-            .stat-label {
-                font-size: 0.4rem !important;
-            }
+            .word-grid { grid-template-columns: repeat(4, 1fr); }
+            .word-text { font-size: 0.72rem; }
         }
     </style>
 </head>
@@ -795,15 +506,12 @@
 
     <div class="sound-control">
         <button class="sound-btn" id="soundToggle" title="音效">🔊</button>
-        <button class="sound-btn" id="voiceToggle" title="语音">🗣️</button>
+        <button class="voice-btn" id="voiceToggle" title="语音">🗣️</button>
     </div>
 
     <div class="sound-wave" id="soundWave">
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
-        <div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        <div class="wave-bar"></div><div class="wave-bar"></div>
     </div>
 
     <div id="initOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;cursor:pointer;background:rgba(26,27,46,0.97);">
@@ -865,132 +573,9 @@
 
     <script>
         (function() {
-            class SoundSystem {
-                constructor() {
-                    this.audioCtx = null;
-                    this.soundEnabled = true;
-                    this.voiceEnabled = true;
-                    this.ready = false;
-                    this.lastSpeakTime = 0;
-                }
-
-                init() {
-                    if (!this.audioCtx) {
-                        try {
-                            this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-                        } catch (e) { return; }
-                    }
-                    if (this.audioCtx.state === 'suspended' || this.audioCtx.state === 'interrupted') {
-                        this.audioCtx.resume().catch(() => {});
-                    }
-                    try {
-                        const ctx = this.audioCtx;
-                        const o = ctx.createOscillator();
-                        const g = ctx.createGain();
-                        o.connect(g);
-                        g.connect(ctx.destination);
-                        g.gain.setValueAtTime(0.001, ctx.currentTime);
-                        o.start(ctx.currentTime);
-                        o.stop(ctx.currentTime + 0.001);
-                    } catch (e) {}
-                    this.ready = true;
-                }
-
-                playSound(type) {
-                    if (!this.soundEnabled || !this.audioCtx) return;
-                    if (this.audioCtx.state === 'suspended') {
-                        this.audioCtx.resume().catch(() => {});
-                    }
-                    try {
-                        const ctx = this.audioCtx,
-                            now = ctx.currentTime;
-                        switch (type) {
-                            case 'click':
-                                this._beep(ctx, now, 800, 0.1);
-                                break;
-                            case 'select':
-                                this._beep(ctx, now, 600, 0.12);
-                                break;
-                            case 'match':
-                                this._beep(ctx, now, 800, 0.15);
-                                break;
-                            case 'wrong':
-                                this._beep(ctx, now, 200, 0.2);
-                                break;
-                            case 'combo':
-                                this._beep(ctx, now, 1000, 0.1);
-                                break;
-                            case 'victory':
-                                this._beep(ctx, now, 523, 0.3);
-                                break;
-                        }
-                    } catch (e) { console.warn('playSound error:', e); }
-                }
-
-                _beep(ctx, now, freq, duration) {
-                    const o = ctx.createOscillator();
-                    const g = ctx.createGain();
-                    o.connect(g);
-                    g.connect(ctx.destination);
-                    o.frequency.value = freq;
-                    g.gain.setValueAtTime(0.1, now);
-                    g.gain.exponentialRampToValueAtTime(0.001, now + duration);
-                    o.start(now);
-                    o.stop(now + duration + 0.05);
-                }
-
-               speak(text, lang) {
-    if (!this.voiceEnabled) return;
-    const now = Date.now();
-    if (now - this.lastSpeakTime < 300) return;
-    this.lastSpeakTime = now;
-    const wave = document.getElementById('soundWave');
-    wave.classList.add('active');
-    try { speechSynthesis.cancel(); } catch (e) {}
-    const voices = speechSynthesis.getVoices() || [];
-
-    // ========= 英语考试听力风格 =========
-    let best;
-    if (lang === 'zh-CN') {
-        // 中文发音：优先 Google 等清晰中文语音
-        best = voices.find(v => /zh/i.test(v.lang) && (v.name.includes('Google') || v.name.includes('Microsoft')))
-            || voices.find(v => /zh/i.test(v.lang))
-            || voices[0];
-    } else {
-        // 英语发音：优选美式/英式，清晰、慢速、接近听力考试
-        best = voices.find(v =>
-            /^en(-US|-GB)?$/i.test(v.lang) &&
-            (v.name.includes('Google') || v.name.includes('Microsoft') || v.name.includes('Samantha') || v.name.includes('Daniel'))
-        ) ||
-        voices.find(v => /^en/i.test(v.lang) && (v.name.includes('Female') || v.name.includes('Male'))) ||
-        voices.find(v => /^en/i.test(v.lang)) ||
-        voices[0];
-    }
-
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang;
-    // 英语语速减慢到 0.8，中文保持 0.9
-    u.rate = lang === 'zh-CN' ? 0.9 : 0.8;
-    u.pitch = 1;
-    if (best) u.voice = best;
-
-    u.onend = () => wave.classList.remove('active');
-    u.onerror = () => wave.classList.remove('active');
-    setTimeout(() => wave.classList.remove('active'), 1000);
-    try { speechSynthesis.speak(u); } catch (e) {
-        console.warn('speak error:', e);
-        wave.classList.remove('active');
-    }
-}
-
-                toggleSound() { this.soundEnabled = !this.soundEnabled; return this.soundEnabled; }
-                toggleVoice() { this.voiceEnabled = !this.voiceEnabled; return this.voiceEnabled; }
-            }
-
-            const sound = new SoundSystem();
-
+            // ==================== 完整单词数据（你的原始数据） ====================
             const wordData = {
-                '7': {
+               '7': {
                     '上': {
                         '1': [{ en: 'make friends', cn: '交朋友' }, { en: 'get to know', cn: '认识；了解' }, { en: 'full', cn: '完整的；满的' }, { en: 'full name', cn: '全名' }, { en: 'grade', cn: '年级；等级' }, { en: 'last name', cn: '姓氏' }, { en: 'classmate', cn: '同班同学' }, { en: 'class teacher', cn: '班主任' }, { en: 'first name', cn: '名字' }, { en: 'mistake', cn: '错误；失误' }, { en: 'country', cn: '国家' }, { en: 'same', cn: '相同的' }, { en: 'twin', cn: '双胞胎之一' }, { en: 'both', cn: '两个都' }, { en: 'band', cn: '乐队' }, { en: 'pot', cn: '锅' }, { en: 'a lot', cn: '很；非常' }, { en: 'tofu', cn: '豆腐' }, { en: 'parrot', cn: '鹦鹉' }, { en: 'guitar', cn: '吉他' }, { en: 'tennis', cn: '网球运动' }, { en: 'page', cn: '页面；页' }, { en: 'even', cn: '甚至；连' }, { en: 'hey', cn: '嘿；喂' }, { en: 'play the guitar', cn: '弹吉他' }, { en: 'would', cn: '想；将会' }, { en: 'would like to', cn: '表示愿意、喜欢' }, { en: 'information', cn: '信息；消息' }, { en: 'hobby', cn: '业余爱好' }, { en: 're', cn: '关于；事由' }, { en: 'mean', cn: '意思是；打算' }, { en: 'husband', cn: '丈夫' }, { en: 'bat', cn: '球棒；球拍' }, { en: 'ping-pong bat', cn: '乒乓球拍' }, { en: 'play ping-pong', cn: '打乒乓球' }, { en: 'together', cn: '在一起；共同' }, { en: 'every day', cn: '每天' }, { en: 'fishing rod', cn: '钓竿' }],
                         '2': [{ en: 'spend', cn: '花（时间、钱等）' }, { en: 'a lot of', cn: '大量；许多' }, { en: 'really', cn: '非常；确实' }, { en: 'member', cn: '成员；会员' }, { en: 'activity', cn: '活动' }, { en: 'chess', cn: '国际象棋' }, { en: 'Chinese chess', cn: '中国象棋' }, { en: 'grandparent', cn: '祖父（母）；外祖父（母）' }, { en: 'funny', cn: '好笑的；奇怪的' }, { en: 'laugh', cn: '笑；发笑' }, { en: 'different', cn: '不同的' }, { en: 'violin', cn: '小提琴' }, { en: 'have fun', cn: '玩得高兴' }, { en: 'hat', cn: '帽子' }, { en: 'handsome', cn: '英俊的' }, { en: 'knee', cn: '膝；膝盖' }, { en: 'at night', cn: '在夜晚' }, { en: 'in the middle', cn: '在中间' }, { en: 'grandchild', cn: '（外）孙子；（外）孙女' }, { en: 'son', cn: '儿子' }, { en: 'hike', cn: '远足；徒步旅行' }, { en: 'go hiking', cn: '远足；徒步旅行' }, { en: 'next to', cn: '紧邻；在……近旁' }, { en: 'hall', cn: '礼堂；大厅' }, { en: 'dining hall', cn: '餐厅' }, { en: 'in front of', cn: '在……前面' }, { en: 'building', cn: '建筑物；房子' }, { en: 'across', cn: '在对面；横过' }, { en: 'across from', cn: '在对面' }, { en: 'centre', cn: '中心；中央' }, { en: 'gym', cn: '体育馆；健身房' }, { en: 'field', cn: '场地；田地' }, { en: 'sports field', cn: '运动场' }, { en: 'office', cn: '办公室' }, { en: 'large', cn: '大的；大号的' }, { en: 'special', cn: '特别的；特殊的' }, { en: 'smart', cn: '智能的；聪明的' }, { en: 'whiteboard', cn: '白板' }],
@@ -1341,6 +926,8 @@
                 }
             };
 
+            // 重要提示：请将上面 wordData 替换为你原文件中 `const wordData = { ... }` 的完整内容！
+
             const encouragements = [
                 '太棒了！🎉', '你真厉害！💪', '继续加油！⭐', '完美！🌟', '好极了！👏',
                 '你是最棒的！👑', '太厉害了！🔥', '完美配对！💎', '聪明绝顶！🎯',
@@ -1348,13 +935,107 @@
                 '这波操作满分！🎮', '太强了！💪', '完美通关！🏆', '大神操作！🌟',
                 '神级配对！🔱', '满分操作！🎯', '太秀了！🎪', '王者操作！👑'
             ];
-
             const wrongMessages = [
                 '再想想哦~', '别灰心，继续！', '加油，你可以的！', '没关系，再试一次！',
                 '稳住，能赢！', '问题不大，再来！', '小场面，别慌！', '重整旗鼓！'
             ];
 
-            let G = {
+            // ==================== 声音系统（完全安全隔离） ====================
+            class SoundSystem {
+                constructor() {
+                    this.audioCtx = null;
+                    this.soundEnabled = true;
+                    this.voiceEnabled = true;
+                    this.ready = false;
+                    this.lastSpeakTime = 0;
+                    this.voicesCache = null;
+                    this.voicesLoaded = false;
+                }
+                init() {
+                    if (!this.audioCtx) {
+                        try { this.audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+                    }
+                    if (this.audioCtx && (this.audioCtx.state === 'suspended' || this.audioCtx.state === 'interrupted')) {
+                        this.audioCtx.resume().catch(() => {});
+                    }
+                    this.ready = true;
+                    this.preloadVoices();
+                }
+                preloadVoices() {
+                    if (typeof speechSynthesis === 'undefined') return;
+                    const load = () => {
+                        const v = speechSynthesis.getVoices();
+                        if (v && v.length) {
+                            this.voicesCache = v;
+                            this.voicesLoaded = true;
+                        }
+                    };
+                    load();
+                    speechSynthesis.onvoiceschanged = load;
+                    setTimeout(() => { if (!this.voicesLoaded) load(); }, 2000);
+                }
+                playSound(type) {
+                    if (!this.soundEnabled || !this.audioCtx) return;
+                    try {
+                        const ctx = this.audioCtx, now = ctx.currentTime;
+                        const beep = (freq, dur) => {
+                            const o = ctx.createOscillator(), g = ctx.createGain();
+                            o.connect(g); g.connect(ctx.destination);
+                            o.frequency.value = freq;
+                            g.gain.setValueAtTime(0.1, now);
+                            g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+                            o.start(now); o.stop(now + dur + 0.05);
+                        };
+                        switch (type) {
+                            case 'click': beep(800, 0.1); break;
+                            case 'select': beep(600, 0.12); break;
+                            case 'match': beep(800, 0.15); break;
+                            case 'wrong': beep(200, 0.2); break;
+                            case 'combo': beep(1000, 0.1); break;
+                            case 'victory': beep(523, 0.3); break;
+                        }
+                    } catch (e) {}
+                }
+                speak(text, lang) {
+                    if (!this.voiceEnabled) return;
+                    if (Date.now() - this.lastSpeakTime < 300) return;
+                    this.lastSpeakTime = Date.now();
+                    const wave = document.getElementById('soundWave');
+                    if (wave) wave.classList.add('active');
+                    // 完全异步，不影响主逻辑
+                    setTimeout(() => {
+                        try {
+                            if (typeof speechSynthesis === 'undefined') return;
+                            speechSynthesis.cancel();
+                            const voices = this.voicesCache || speechSynthesis.getVoices() || [];
+                            let best;
+                            if (lang === 'zh-CN') {
+                                best = voices.find(v => /zh/i.test(v.lang) && (v.name.includes('Google') || v.name.includes('Microsoft')))
+                                    || voices.find(v => /zh/i.test(v.lang)) || voices[0];
+                            } else {
+                                best = voices.find(v => /^en(-US|-GB)?$/i.test(v.lang) && (v.name.includes('Google') || v.name.includes('Microsoft')))
+                                    || voices.find(v => /^en/i.test(v.lang)) || voices[0];
+                            }
+                            const u = new SpeechSynthesisUtterance(text);
+                            u.lang = lang;
+                            u.rate = lang === 'zh-CN' ? 0.9 : 0.8;
+                            u.pitch = 1;
+                            if (best) u.voice = best;
+                            u.onend = () => { if (wave) wave.classList.remove('active'); };
+                            u.onerror = () => { if (wave) wave.classList.remove('active'); };
+                            speechSynthesis.speak(u);
+                        } catch (e) {}
+                        setTimeout(() => { if (wave) wave.classList.remove('active'); }, 1000);
+                    }, 0);
+                }
+                toggleSound() { this.soundEnabled = !this.soundEnabled; return this.soundEnabled; }
+                toggleVoice() { this.voiceEnabled = !this.voiceEnabled; return this.voiceEnabled; }
+            }
+
+            const sound = new SoundSystem();
+
+            // ==================== 游戏状态 ====================
+            const G = {
                 currentGrade: '7',
                 currentSemester: '上',
                 currentUnit: 'all',
@@ -1373,68 +1054,61 @@
                 timerRunning: false,
                 timerEnded: false,
                 matchedSet: new Set(),
-                remainingWords: []
+                remainingWords: [],
+                isProcessing: false,   // 防连点
+                roundLocked: false
             };
 
+            // ==================== 核心函数 ====================
             function init() {
                 const overlay = document.getElementById('initOverlay');
-                let overlayRemoved = false;
-
-                function handleOverlayClick() {
-                    if (overlayRemoved) return;
-                    overlayRemoved = true;
+                let removed = false;
+                function removeOverlay() {
+                    if (removed) return;
+                    removed = true;
                     overlay.style.display = 'none';
-                    overlay.removeEventListener('click', handleOverlayClick);
+                    overlay.removeEventListener('click', removeOverlay);
                     try { sound.init(); } catch (e) {}
+                    // 激活语音权限
                     try {
-                        if (window.speechSynthesis) {
-                            speechSynthesis.getVoices();
-                            const activateVoice = new SpeechSynthesisUtterance('Hello');
-                            activateVoice.volume = 1;
-                            activateVoice.rate = 1.5;
-                            activateVoice.lang = 'en-US';
-                            activateVoice.onend = () => {};
-                            activateVoice.onerror = () => {};
-                            speechSynthesis.speak(activateVoice);
+                        if (typeof speechSynthesis !== 'undefined') {
+                            const u = new SpeechSynthesisUtterance('');
+                            u.volume = 0; u.rate = 1;
+                            speechSynthesis.speak(u);
                         }
                     } catch (e) {}
                 }
-                overlay.addEventListener('click', handleOverlayClick);
-                setTimeout(function() {
-                    if (!overlayRemoved && overlay.style.display !== 'none') {
-                        overlay.style.display = 'none';
-                    }
-                }, 5000);
+                overlay.addEventListener('click', removeOverlay);
+                setTimeout(() => { if (!removed) overlay.style.display = 'none'; }, 5000);
 
-                document.getElementById('newGameBtn').addEventListener('click', () => {
-                    if (G.timerEnded) return;
-                    startGame();
-                });
+                // 绑定所有按钮
+                bindEvents();
+                updateUnitButtons();
+                startGame();
+            }
 
+            function bindEvents() {
+                document.getElementById('newGameBtn').addEventListener('click', () => { if (!G.timerEnded) startGame(); });
                 document.getElementById('testVoiceBtn').addEventListener('click', () => {
                     sound.init();
-                    sound.speak('Hello, this is a test', 'en-US');
-                    setTimeout(() => sound.speak('你好，这是一个测试', 'zh-CN'), 1500);
+                    setTimeout(() => sound.speak('Hello', 'en-US'), 100);
+                    setTimeout(() => sound.speak('你好', 'zh-CN'), 1200);
                 });
-
                 document.getElementById('soundToggle').addEventListener('click', () => {
                     sound.init();
                     const on = sound.toggleSound();
                     document.getElementById('soundToggle').textContent = on ? '🔊' : '🔇';
                     document.getElementById('soundToggle').classList.toggle('muted', !on);
                 });
-
                 document.getElementById('voiceToggle').addEventListener('click', () => {
                     sound.init();
                     const on = sound.toggleVoice();
                     document.getElementById('voiceToggle').textContent = on ? '🗣️' : '🙊';
                     document.getElementById('voiceToggle').classList.toggle('muted', !on);
                 });
-
                 document.querySelectorAll('.grade-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
-                        sound.init();
-                        sound.playSound('click');
+                        sound.init(); sound.playSound('click');
                         document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
                         G.currentGrade = btn.dataset.grade;
@@ -1443,11 +1117,9 @@
                         startGame();
                     });
                 });
-
                 document.querySelectorAll('.semester-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
-                        sound.init();
-                        sound.playSound('click');
+                        sound.init(); sound.playSound('click');
                         document.querySelectorAll('.semester-btn').forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
                         G.currentSemester = btn.dataset.semester;
@@ -1456,60 +1128,38 @@
                         startGame();
                     });
                 });
-
-                updateUnitButtons();
-                startGame();
-
-                const resetCard = document.getElementById('resetCard');
-                resetCard.addEventListener('click', () => {
-                    G.score = 0;
-                    G.correct = 0;
-                    G.wrong = 0;
-                    G.combo = 0;
-                    G.maxCombo = 0;
-                    G.matchedPairs = 0;
-                    G.wrongWords.clear();
-                    stopTimer();
-                    G.timerEnded = false;
+                document.getElementById('resetCard').addEventListener('click', () => {
+                    G.score = 0; G.correct = 0; G.wrong = 0; G.combo = 0;
+                    G.matchedPairs = 0; G.wrongWords.clear();
+                    G.isProcessing = false; G.roundLocked = false;
+                    G.selectedCard = null;
+                    stopTimer(); G.timerEnded = false;
                     document.getElementById('wordGrid').classList.remove('timer-ended');
-                    const timerOverlay = document.getElementById('timerEndOverlay');
-                    if (timerOverlay) timerOverlay.remove();
+                    const o = document.getElementById('timerEndOverlay');
+                    if (o) o.remove();
                     updateStats();
-                    document.querySelectorAll('.word-card').forEach(c => {
-                        c.classList.remove('matched', 'hidden', 'selected', 'wrong');
-                    });
                 });
-
                 document.getElementById('timer3Btn').addEventListener('click', () => startTimer(180));
                 document.getElementById('timer5Btn').addEventListener('click', () => startTimer(300));
             }
 
-            function startTimer(seconds) {
+            function startTimer(sec) {
                 stopTimer();
-                G.timerSeconds = seconds;
-                G.timerRunning = true;
-                G.timerEnded = false;
-                G.score = 0;
-                G.correct = 0;
-                G.wrong = 0;
-                G.combo = 0;
-                G.matchedPairs = 0;
+                G.timerSeconds = sec; G.timerRunning = true; G.timerEnded = false;
+                G.score = 0; G.correct = 0; G.wrong = 0; G.combo = 0; G.matchedPairs = 0;
+                G.isProcessing = false; G.roundLocked = false;
                 document.getElementById('wordGrid').classList.remove('timer-ended');
-                startGame();
-                updateStats();
+                startGame(); updateStats();
                 G.timerInterval = setInterval(() => {
                     G.timerSeconds--;
                     updateTimerDisplay();
-                    if (G.timerSeconds <= 0) {
-                        endTimer();
-                    }
+                    if (G.timerSeconds <= 0) endTimer();
                 }, 1000);
                 updateTimerDisplay();
             }
 
             function stopTimer() {
-                if (G.timerInterval) { clearInterval(G.timerInterval);
-                    G.timerInterval = null; }
+                if (G.timerInterval) { clearInterval(G.timerInterval); G.timerInterval = null; }
                 G.timerRunning = false;
                 document.getElementById('timerDisplay').textContent = '--:--';
             }
@@ -1521,8 +1171,7 @@
             }
 
             function endTimer() {
-                stopTimer();
-                G.timerEnded = true;
+                stopTimer(); G.timerEnded = true;
                 document.getElementById('wordGrid').classList.add('timer-ended');
                 sound.playSound('victory');
                 let overlay = document.getElementById('timerEndOverlay');
@@ -1533,31 +1182,24 @@
                     document.querySelector('.game-area').appendChild(overlay);
                 }
                 overlay.innerHTML = '⏱️ 时间到！<br><span style="font-size:0.8rem;color:#AAA">点击下方「清零」恢复游戏</span>';
-                setTimeout(() => {
-                    try {
-                        const o = document.getElementById('timerEndOverlay');
-                        if (o) o.remove();
-                    } catch (e) {}
-                }, 5000);
+                setTimeout(() => { const o = document.getElementById('timerEndOverlay'); if (o) o.remove(); }, 5000);
             }
 
             function updateUnitButtons() {
                 const sel = document.getElementById('unitSelector');
-                const sem = wordData[G.currentGrade][G.currentSemester];
+                const sem = wordData[G.currentGrade]?.[G.currentSemester] || {};
                 let html = '<button class="unit-btn active" data-unit="all">全部</button>';
-                const unitOrder = ['S1', 'S2', 'S3', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'];
+                const unitOrder = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
                 for (const key of unitOrder) {
                     if (sem[key] && sem[key].length > 0) {
-                        const label = key.startsWith('S') ? key : 'U' + key;
-                        html += '<button class="unit-btn" data-unit="' + key + '">' + label + '</button>';
+                        html += `<button class="unit-btn" data-unit="${key}">U${key}</button>`;
                     }
                 }
                 sel.innerHTML = html;
                 sel.querySelectorAll('.unit-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
                         if (G.timerEnded) return;
-                        sound.init();
-                        sound.playSound('click');
+                        sound.init(); sound.playSound('click');
                         sel.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
                         G.currentUnit = btn.dataset.unit;
@@ -1567,76 +1209,67 @@
             }
 
             function startGame() {
-                sound.init();
-                sound.playSound('click');
-                G.selectedCard = null;
-                G.correct = 0;
-                G.wrong = 0;
-                G.combo = 0;
-                G.maxCombo = 0;
-                G.matchedPairs = 0;
-                G.matchedSet = new Set();
+                sound.init(); sound.playSound('click');
+                G.selectedCard = null; G.correct = 0; G.wrong = 0; G.combo = 0;
+                G.matchedPairs = 0; G.matchedSet = new Set();
+                G.isProcessing = false; G.roundLocked = false;
 
+                const semData = wordData[G.currentGrade]?.[G.currentSemester] || {};
                 let allWords = [];
-                const semData = wordData[G.currentGrade][G.currentSemester];
                 if (G.currentUnit === 'all') {
-                    for (let u in semData) allWords = allWords.concat(semData[u]);
+                    for (let u in semData) { allWords = allWords.concat(semData[u]); }
                 } else {
                     allWords = [...(semData[G.currentUnit] || [])];
+                }
+                if (allWords.length === 0) {
+                    setHint('该单元暂无单词数据，请选择其他单元');
+                    document.getElementById('wordGrid').innerHTML = '<div style="text-align:center;padding:40px;color:#A8AAC4;">暂无数据</div>';
+                    updateStats();
+                    return;
                 }
 
                 let pool = [];
                 allWords.forEach(w => {
                     const weight = 1 + (G.wrongWords.get(w.en) || 0);
-                    for (let i = 0; i < weight; i++) pool.push(w);
+                    for (let i=0; i<Math.min(weight,5); i++) pool.push(w);
                 });
-
-                for (let i = pool.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
+                for (let i=pool.length-1; i>0; i--) {
+                    const j = Math.floor(Math.random()*(i+1));
                     [pool[i], pool[j]] = [pool[j], pool[i]];
                 }
-
                 let seen = new Set();
                 G.remainingWords = [];
                 for (const w of pool) {
-                    if (!seen.has(w.en)) {
-                        seen.add(w.en);
-                        G.remainingWords.push(w);
-                    }
+                    if (!seen.has(w.en)) { seen.add(w.en); G.remainingWords.push(w); }
                 }
-
-                const chosen = G.remainingWords.slice(0, 10);
-                G.currentWords = chosen;
-                G.totalPairs = chosen.length;
-                renderCards(chosen);
+                const take = Math.min(10, G.remainingWords.length);
+                G.currentWords = G.remainingWords.slice(0, take);
+                G.totalPairs = G.currentWords.length;
+                renderCards(G.currentWords);
                 updateStats();
             }
 
             function nextRound() {
-                if (G.timerEnded) return;
-                G.selectedCard = null;
+                if (G.timerEnded || G.roundLocked) return;
+                G.roundLocked = true;
+                G.selectedCard = null; G.isProcessing = false;
                 try { speechSynthesis.cancel(); } catch (e) {}
                 G.remainingWords = G.remainingWords.filter(w => !G.matchedSet.has(w.en));
-
                 if (G.remainingWords.length === 0) {
                     sound.playSound('victory');
                     showVictory();
+                    G.roundLocked = false;
                     return;
                 }
-
                 const take = Math.min(10, G.remainingWords.length);
-                const chosen = G.remainingWords.slice(0, take);
-                G.currentWords = chosen;
-                G.totalPairs = chosen.length;
+                G.currentWords = G.remainingWords.slice(0, take);
+                G.totalPairs = G.currentWords.length;
                 G.matchedSet = new Set();
-                G.correct = 0;
-                G.wrong = 0;
-                G.combo = 0;
-                G.matchedPairs = 0;
-
+                G.correct = 0; G.wrong = 0; G.combo = 0; G.matchedPairs = 0;
                 requestAnimationFrame(() => {
-                    renderCards(chosen);
+                    renderCards(G.currentWords);
                     updateStats();
+                    G.roundLocked = false;
                 });
             }
 
@@ -1645,188 +1278,143 @@
                 grid.innerHTML = '';
                 let cards = [];
                 words.forEach((w, i) => {
-                    cards.push({ text: w.en, type: 'en', pairId: i, word: w });
-                    cards.push({ text: w.cn, type: 'cn', pairId: i, word: w });
+                    cards.push({ text: w.en, type: 'en', pairId: i });
+                    cards.push({ text: w.cn, type: 'cn', pairId: i });
                 });
-
-                for (let i = cards.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
+                for (let i=cards.length-1; i>0; i--) {
+                    const j = Math.floor(Math.random()*(i+1));
                     [cards[i], cards[j]] = [cards[j], cards[i]];
                 }
-
-                const fragment = document.createDocumentFragment();
-                cards.forEach((card, idx) => {
+                const frag = document.createDocumentFragment();
+                cards.forEach((c, idx) => {
                     const el = document.createElement('div');
                     el.className = 'word-card';
-                    el.dataset.type = card.type;
-                    el.dataset.pairId = card.pairId;
-                    el.dataset.text = card.text;
-                    el.innerHTML = `
-                    <div class="speak-icon">🔊</div>
-                    <div class="word-text">${card.text}</div>
-                    <div class="word-type">${card.type === 'en' ? '英文' : '中文'}</div>
-                `;
-                    el.addEventListener('click', () => onCardClick(el));
+                    el.dataset.type = c.type;
+                    el.dataset.pairId = c.pairId;
+                    el.dataset.text = c.text;
+                    el.innerHTML = `<div class="speak-icon">🔊</div><div class="word-text">${c.text}</div><div class="word-type">${c.type==='en'?'英文':'中文'}</div>`;
+                    el.addEventListener('click', () => handleCardClick(el));
                     el.style.animation = `fadeIn 0.4s ease ${idx * 0.03}s both`;
-                    fragment.appendChild(el);
+                    frag.appendChild(el);
                 });
-                grid.appendChild(fragment);
+                grid.appendChild(frag);
             }
 
-            function onCardClick(card) {
-                if (G.timerEnded) return;
+            // ==================== 安全的卡片点击处理 ====================
+            function handleCardClick(card) {
+                if (G.timerEnded || G.isProcessing) return;
                 if (card.classList.contains('matched') || card.classList.contains('hidden')) return;
 
-                sound.init();
-                const text = card.dataset.text;
-                const lang = card.dataset.type === 'en' ? 'en-US' : 'zh-CN';
-                sound.speak(text, lang);
+                // 语音完全异步，不影响配对
+                try {
+                    sound.init();
+                    const text = card.dataset.text;
+                    const lang = card.dataset.type === 'en' ? 'en-US' : 'zh-CN';
+                    setTimeout(() => sound.speak(text, lang), 0);
+                } catch (e) {}
 
                 if (!G.selectedCard) {
                     sound.playSound('select');
                     G.selectedCard = card;
                     card.classList.add('selected');
-                    setHint(`已选"${text}"，选对应的${card.dataset.type === 'en' ? '中文' : '英文'}！`);
+                    setHint(`已选"${card.dataset.text}"，选对应的${card.dataset.type==='en'?'中文':'英文'}！`);
                 } else if (G.selectedCard === card) {
                     card.classList.remove('selected');
                     G.selectedCard = null;
                     setHint('点击英文单词，再点击对应的中文意思进行配对！');
                 } else {
-                    const first = G.selectedCard;
-                    const second = card;
-                    if (first.dataset.pairId === second.dataset.pairId &&
-                        first.dataset.type !== second.dataset.type) {
-                        onMatch(first, second);
+                    const first = G.selectedCard, second = card;
+                    if (first.dataset.pairId === second.dataset.pairId && first.dataset.type !== second.dataset.type) {
+                        handleMatch(first, second);
                     } else {
-                        onMismatch(first, second);
+                        handleMismatch(first, second);
                     }
                 }
             }
 
-            function onMatch(first, second) {
+            function handleMatch(first, second) {
+                G.isProcessing = true;
                 sound.playSound('match');
-                first.classList.remove('selected');
-                first.classList.add('matched');
+                first.classList.remove('selected'); first.classList.add('matched');
                 second.classList.add('matched');
                 G.selectedCard = null;
-                G.correct++;
-                G.combo++;
-                G.matchedPairs++;
-                G.score += 1;
-
-                setHint(encouragements[Math.floor(Math.random() * encouragements.length)]);
-                spawnStars(first);
-                spawnStars(second);
-
+                G.correct++; G.combo++; G.matchedPairs++; G.score++;
+                setHint(encouragements[Math.floor(Math.random()*encouragements.length)]);
+                trySpawnStars(first); trySpawnStars(second);
                 if (G.combo >= 2) {
                     sound.playSound('combo');
-                    const el = document.createElement('div');
-                    el.className = 'combo';
-                    el.textContent = `🔥 ${G.combo}连击！`;
+                    const el = document.createElement('div'); el.className = 'combo'; el.textContent = `🔥 ${G.combo}连击！`;
                     document.body.appendChild(el);
-                    setTimeout(() => { try { el.remove(); } catch (e) {} }, 800);
+                    setTimeout(() => { try { if (el.isConnected) el.remove(); } catch(e){} }, 800);
                 }
-
                 updateStats();
-
-                const enWord = first.dataset.type === 'en' ? first.dataset.text : second.dataset.text;
+                const enWord = first.dataset.type==='en' ? first.dataset.text : second.dataset.text;
                 G.matchedSet.add(enWord);
-
                 setTimeout(() => {
-                    first.classList.add('hidden');
-                    second.classList.add('hidden');
+                    try { if (first.isConnected) first.classList.add('hidden'); if (second.isConnected) second.classList.add('hidden'); } catch(e){}
+                    G.isProcessing = false;
                 }, 400);
-
-                if (G.matchedPairs === G.totalPairs) {
-                    setTimeout(() => {
-                        sound.playSound('match');
-                        nextRound();
-                    }, 600);
+                if (G.matchedPairs >= G.totalPairs) {
+                    setTimeout(() => { if (!G.roundLocked) nextRound(); }, 600);
                 }
             }
 
-            function onMismatch(first, second) {
+            function handleMismatch(first, second) {
+                G.isProcessing = true;
                 sound.playSound('wrong');
-                first.classList.add('wrong');
-                second.classList.add('wrong');
-
-                const word = first.dataset.type === 'en' ? first.dataset.text : second.dataset.text;
-                G.wrongWords.set(word, (G.wrongWords.get(word) || 0) + 1);
-                if (G.wrongWords.size > 50) {
-                    const firstKey = G.wrongWords.keys().next().value;
-                    G.wrongWords.delete(firstKey);
-                }
-                G.wrong++;
-                G.combo = 0;
-                G.score -= 1;
-
-                setHint(wrongMessages[Math.floor(Math.random() * wrongMessages.length)]);
+                first.classList.add('wrong'); second.classList.add('wrong');
+                const word = first.dataset.type==='en' ? first.dataset.text : second.dataset.text;
+                G.wrongWords.set(word, (G.wrongWords.get(word)||0)+1);
+                if (G.wrongWords.size > 50) { const k = G.wrongWords.keys().next().value; G.wrongWords.delete(k); }
+                G.wrong++; G.combo = 0; G.score = Math.max(0, G.score-1);
+                setHint(wrongMessages[Math.floor(Math.random()*wrongMessages.length)]);
                 updateStats();
-
                 setTimeout(() => {
-                    first.classList.remove('selected', 'wrong');
-                    second.classList.remove('wrong');
+                    try { if (first.isConnected) first.classList.remove('selected','wrong'); if (second.isConnected) second.classList.remove('wrong'); } catch(e){}
                     G.selectedCard = null;
+                    G.isProcessing = false;
                 }, 400);
             }
 
             function showVictory() {
-                const acc = G.correct + G.wrong > 0 ?
-                    Math.round(G.correct / (G.correct + G.wrong) * 100) : 0;
-                const el = document.createElement('div');
-                el.className = 'encouragement';
+                const acc = G.correct+G.wrong > 0 ? Math.round(G.correct/(G.correct+G.wrong)*100) : 0;
+                const el = document.createElement('div'); el.className = 'encouragement';
                 el.innerHTML = `🎉 恭喜通关！🎉<br><span style="font-size:0.85rem">得分:${G.score} 正确:${G.correct} 错误:${G.wrong} 正确率:${acc}%</span>`;
                 document.body.appendChild(el);
-                setTimeout(() => { try { el.remove(); } catch (e) {} }, 3000);
+                setTimeout(() => { try { if (el.isConnected) el.remove(); } catch(e){} }, 3000);
             }
 
-            function spawnStars(el) {
-                if (!el || !el.isConnected || !el.getBoundingClientRect) return;
+            function trySpawnStars(el) {
                 try {
+                    if (!el || !el.isConnected) return;
                     const r = el.getBoundingClientRect();
                     if (!r.width || !r.height) return;
-                    const stars = ['⭐', '✨', '💫'];
-                    for (let i = 0; i < 2; i++) {
-                        const s = document.createElement('div');
-                        s.className = 'star';
-                        s.textContent = stars[i % stars.length];
-                        s.style.left = (r.left + r.width / 2 + (i - 0.5) * 30) + 'px';
-                        s.style.top = (r.top + r.height / 2 + (Math.random() - 0.5) * 30) + 'px';
+                    const stars = ['⭐','✨','💫'];
+                    for (let i=0; i<2; i++) {
+                        const s = document.createElement('div'); s.className = 'star';
+                        s.textContent = stars[i%3];
+                        s.style.left = (r.left + r.width/2 + (i-0.5)*30) + 'px';
+                        s.style.top = (r.top + r.height/2 + (Math.random()-0.5)*30) + 'px';
                         s.style.fontSize = '14px';
                         document.body.appendChild(s);
-                        setTimeout(() => {
-                            try {
-                                if (s.isConnected) s.remove();
-                            } catch (e) {}
-                        }, 600);
+                        setTimeout(() => { try { if (s.isConnected) s.remove(); } catch(e){} }, 600);
                     }
-                } catch (e) {
-                    console.warn('spawnStars error:', e);
-                }
+                } catch(e){}
             }
 
-            function setHint(text) { document.getElementById('hint').textContent = text; }
-
+            function setHint(text) { const h = document.getElementById('hint'); if (h) h.textContent = text; }
             function updateStats() {
                 document.getElementById('score').textContent = G.score;
                 document.getElementById('correct').textContent = G.correct;
                 document.getElementById('wrong').textContent = G.wrong;
                 document.getElementById('matched').textContent = G.matchedPairs;
-                const pct = (G.matchedPairs / G.totalPairs) * 100;
+                const pct = G.totalPairs > 0 ? (G.matchedPairs/G.totalPairs)*100 : 0;
                 document.getElementById('progressFill').style.width = pct + '%';
             }
 
             document.addEventListener('DOMContentLoaded', init);
-
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('service-worker.js')
-                        .then(r => console.log('SW OK'))
-                        .catch(e => console.warn('SW fail', e));
-                });
-            }
+            // 不再注册 service worker，避免 404 错误
         })();
     </script>
 </body>
-
 </html>
